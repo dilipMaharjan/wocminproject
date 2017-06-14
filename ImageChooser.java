@@ -49,30 +49,6 @@ public class ImageChooser extends JFrame {
 		
 	}
 	
-	// Error Window class that displays a pop up message to help correct the problem
-	public class ErrorWindow extends JFrame {
-		JPanel panel = new JPanel();
-		
-		public ErrorWindow(int a) {
-			
-			setSize(350, 100);
-			setLocation(350, 350);
-			if (a == 1) {
-				
-				JLabel label = new JLabel("Hmm, this doesn't look like an image");
-				JLabel label2 = new JLabel("Try selecting a different file");
-				panel.add(label);
-				panel.add(label2);
-				add(panel);
-				setVisible(true);
-				
-				imageButton.setText("Choose another file");
-				field.setEditable(false);
-				uploadButton.setEnabled(false);
-			}
-		}
-	}
-	
 	// Action Listener for both image select and upload buttons
 	public class FileChooseListener implements ActionListener {
 		File file = new File("");
@@ -96,7 +72,8 @@ public class ImageChooser extends JFrame {
 						uploadButton.setEnabled(true);
 					}
 					else {
-						new ErrorWindow(1); 
+						JOptionPane.showMessageDialog(new JFrame(), "Hmm, this doesn't look like an image. Try selecting"
+								+ " another file.");
 						return;
 					}
 				}
