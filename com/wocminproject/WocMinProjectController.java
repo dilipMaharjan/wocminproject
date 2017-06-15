@@ -34,14 +34,16 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
     //TODO: show some kind of dialog while mapping is going on?
 
     //read in the mapping and process it
-    processMapping(folder);
+    boolean success = processMapping(folder);
     //then have the user select the source image
-    mappingChooser.setVisible(false);
-    imageChooser = new ImageChooser();
-    imageChooser.setImageChosenListener(this);
+    if (success) {
+      mappingChooser.setVisible(false);
+      imageChooser = new ImageChooser();
+      imageChooser.setImageChosenListener(this);
+    }
   }
 
-  private void processMapping(File mappingFolder)
+  private boolean processMapping(File mappingFolder)
   {
     mapping = new ArrayList<MappedGlyph>();
     //get mapping information for each image in the folder
@@ -54,18 +56,40 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
 
       //the first char of the file name will be the character to map it to
       char newChar = file.getName().charAt(0);
-      MappedGlyph glyph = new MappedGlyph(newChar);
+      MappedGlyph mappedGlyph = new MappedGlyph(newChar);
 
       //send the image to the server and get back the feature descriptor stamp
-      glyph.setFeatureDescriptor(new int[1000]);
+      String json = serviceRequester.getGlyphInfo(file);
+      if (json.isEmpty()) {
+        //TODO: show warning that a file in the directory wasn't processed correctly
+        continue;
+      }
+      ArrayList<GlyphInfo> foundGlyphs = deserializer.getGlyphInfoFromJson(json);
+      if (foundGlyphs.size() == 0) {
+        //TODO: show warning that a file in the directory wasn't processed correctly
+        continue;
+      }
+
+      //get the feature descriptor stamp from the analyzed glyph info
+      GlyphInfo foundGlyph = foundGlyphs.get(0);
+      mappedGlyph.setFeatureDescriptor(foundGlyph.getImg());
 
       //add to mapping
-      mapping.add(glyph);
+      mapping.add(mappedGlyph);
     }
 
+    System.out.print("mapping: ");
     for (MappedGlyph glyph : mapping) {
-      System.out.println(glyph.getCharacter() + " " + glyph.getFeatureDescriptor());
+      System.out.println(glyph.toString());
     }
+
+    //TODO: display warning if no characters were found to map to
+    if (mapping.isEmpty()) {
+      return false; //finding mapping info was unsuccessful
+    } else {
+      return true;
+    }
+    
   }
 
   public void imageChosen(File image)

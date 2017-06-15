@@ -27,6 +27,11 @@ public class MappedGlyph {
   }
 
   public String toString() {
-		return String.valueOf(character);
+    StringBuilder value = new StringBuilder(character + "[");
+    for (int number : featureDescriptor) {
+      value.append(number + " ");
+    }
+    value.append("]");
+		return value.toString();
 	}
 }
