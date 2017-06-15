@@ -25,4 +25,8 @@ public class MappedGlyph {
   {
     this.featureDescriptor = featureDescriptor;
   }
+
+  public String toString() {
+		return String.valueOf(character);
+	}
 }

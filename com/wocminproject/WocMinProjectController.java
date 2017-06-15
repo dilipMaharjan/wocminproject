@@ -43,8 +43,29 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
 
   private void processMapping(File mappingFolder)
   {
-    //use files in folder to find mapping
     mapping = new ArrayList<MappedGlyph>();
+    //get mapping information for each image in the folder
+    for(File file : mappingFolder.listFiles()) {
+      //if the folder item is actually another folder, ignore it
+      //TODO: also ignore files that aren't images (maybe should go in MappingChooser instead?)
+      if (!file.isFile()) {
+        continue;
+      }
+
+      //the first char of the file name will be the character to map it to
+      char newChar = file.getName().charAt(0);
+      MappedGlyph glyph = new MappedGlyph(newChar);
+
+      //send the image to the server and get back the feature descriptor stamp
+      glyph.setFeatureDescriptor(new int[1000]);
+
+      //add to mapping
+      mapping.add(glyph);
+    }
+
+    for (MappedGlyph glyph : mapping) {
+      System.out.println(glyph.getCharacter() + " " + glyph.getFeatureDescriptor());
+    }
   }
 
   public void imageChosen(File image)

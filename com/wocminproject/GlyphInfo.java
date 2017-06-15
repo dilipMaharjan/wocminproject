@@ -13,6 +13,16 @@ public class GlyphInfo {
   {
     return img;
   }
+  public String getImg(int i) {
+		String a = "";
+		for(int j = 0; j < i; j++) {
+			a += String.valueOf(img[j] + "  ");
+			if(img[j] < 10) {
+				a += " ";
+			}
+		}
+		return a;
+	}
   public int getXDim()
   {
     return x_dim;
