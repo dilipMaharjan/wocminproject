@@ -20,12 +20,7 @@ import okhttp3.Response;
  */
 public class RequestGlyphArray {
 
-    public static void main(String[] args) {
-        File file = new File("test2.png");
-        new RequestGlyphArray().getGlyphInfo(file);
-    }
-
-    private void getGlyphInfo(File file) {
+    public void getGlyphInfo(File file) {
         try {
 
             String mimeType = URLConnection.guessContentTypeFromName(file.getName());
