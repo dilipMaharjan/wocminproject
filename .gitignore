@@ -1,5 +1,3 @@
-
-
 # NetBeans specific #
 nbproject/private/
 build/
@@ -8,7 +6,7 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
-
+ *target
 # Class Files #
 *.class
 
@@ -16,4 +14,5 @@ nb-configuration.xml
 *.jar
 *.war
 *.ear
+
 
