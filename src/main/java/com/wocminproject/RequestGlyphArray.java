@@ -5,8 +5,15 @@
  */
 package com.wocminproject;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.wocminproject.models.ImageInfo;
 import java.io.File;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -42,10 +49,27 @@ public class RequestGlyphArray {
 
             Response response = client.newCall(request).execute();
             String json = response.body().string();
-            System.out.println("I am the response" +json);
+            for (ImageInfo imageInfo : getSortedArray(json)) {
+                System.out.println(imageInfo.getXStart());
+            }
+            System.out.println("I am the response" + json);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private ArrayList<ImageInfo> getSortedArray(String jsonString) {
+        ArrayList<ImageInfo> imageInfo = new Gson().fromJson(jsonString, new TypeToken<List<ImageInfo>>() {
+        }.getType());
+        Collections.sort(imageInfo, new Comparator<ImageInfo>() {
+            public int compare(ImageInfo o1, ImageInfo o2) {
+                if (o1.getXStart() == o2.getXStart()) {
+                    return 0;
+                }
+                return o1.getXStart() < o2.getXStart() ? -1 : 1;
+            }
+        });
+
+        return imageInfo;
+    }
 }
