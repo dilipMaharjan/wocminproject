@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
 import javax.swing.filechooser.*;
+import java.util.*;
 
 public class AlphabetUploader extends JFrame {
 	
@@ -13,8 +14,11 @@ public class AlphabetUploader extends JFrame {
 	private DirectoryChooser d1;
 	private File folder;
 	private File[] listFiles;
+	private ArrayList<HandwrittenLetter> alphabet;
 	
 	public AlphabetUploader() {
+		
+		alphabet = new ArrayList<HandwrittenLetter>();
 		setSize(800, 250);
 		setLocation(300, 300);
 		
@@ -69,17 +73,41 @@ public class AlphabetUploader extends JFrame {
 			}
 			
 			if (e.getSource() == uploadButton) {
-				JPanel picPanel = new JPanel();
 				
 				for(int i = 0; i < listFiles.length; i++) {
-					System.out.println(listFiles[i].getName());
+					// send each character to server
+					// receive back stamp info -> simulated with .createGlyph() method
+					// parse letter via file name DONE
+					// create new object with character and stamp data and compile into arraylist (HandwrittenLetter, alphabet) DONE
+					// be able to iterate through arraylist and return data, whether character or stamp DONE
 					
+					char newChar = listFiles[i].getName().charAt(0);
+					
+					
+					
+					
+					GlyphInfo newGlyph = new GlyphInfo();
+					newGlyph.createGlyph();
+					
+					// ArrayList of HandwrittenLetter objects, each one contains 1) character and 2) stamp
+					alphabet.add(new HandwrittenLetter(newChar, newGlyph.getImg()));
+				
+				
 				}
+				
+				// Print out character with stamp data line by line
+				for(int i = 0; i < alphabet.size(); i++) {
+					System.out.print(alphabet.get(i).getChar() + ": ");
+					
+					System.out.print(alphabet.get(i).getImg(100));
+					
+					System.out.println();
+				}	
 			}
-			
 		}
 	}
 }
+
 	
-	
+
 
