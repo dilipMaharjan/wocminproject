@@ -8,8 +8,9 @@ public class GlyphInfo {
   private int x_start;
   private int y_dim;
   private int y_start;
+  private char matchedCharacter;
 
-  public int[] getImg()
+  public int[] getFeatureDescriptor()
   {
     return img;
   }
@@ -38,5 +39,13 @@ public class GlyphInfo {
   public int getYStart()
   {
     return y_start;
+  }
+  public char getMatchedCharacter()
+  {
+    return matchedCharacter;
+  }
+  public void setMatchedCharacter(char character)
+  {
+    matchedCharacter = character;
   }
 }

@@ -8,8 +8,10 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
   ImageChooser imageChooser;
   RequestGlyphArray serviceRequester;
   DeserializeGlyphInfo deserializer;
+  CalcGlyphSimilarity glyphMatcher;
 
   ArrayList<MappedGlyph> mapping;
+  //ArrayList<GlyphInfo> foundGlyphs;
 
   public static void main(String[] args)
   {
@@ -20,6 +22,7 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
   {
     serviceRequester = new RequestGlyphArray();
     deserializer = new DeserializeGlyphInfo();
+    glyphMatcher = new CalcGlyphSimilarity();
   }
 
   public void run()
@@ -64,15 +67,15 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
         //TODO: show warning that a file in the directory wasn't processed correctly
         continue;
       }
-      ArrayList<GlyphInfo> foundGlyphs = deserializer.getGlyphInfoFromJson(json);
-      if (foundGlyphs.size() == 0) {
+      ArrayList<GlyphInfo> foundGlyphInfo = deserializer.getGlyphInfoFromJson(json);
+      if (foundGlyphInfo.size() == 0) {
         //TODO: show warning that a file in the directory wasn't processed correctly
         continue;
       }
 
       //get the feature descriptor stamp from the analyzed glyph info
-      GlyphInfo foundGlyph = foundGlyphs.get(0);
-      mappedGlyph.setFeatureDescriptor(foundGlyph.getImg());
+      GlyphInfo glyphInfo = foundGlyphInfo.get(0);
+      mappedGlyph.setFeatureDescriptor(glyphInfo.getFeatureDescriptor());
 
       //add to mapping
       mapping.add(mappedGlyph);
@@ -89,7 +92,7 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
     } else {
       return true;
     }
-    
+
   }
 
   public void imageChosen(File image)
@@ -114,7 +117,30 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
 
   private void mapGlyphs(ArrayList<GlyphInfo> foundGlyphs)
   {
-    System.out.println("Glyphs to match: " + foundGlyphs.size());
-    System.out.println("Glyphs in mapping: " + mapping.size());
+    //for each found glyph, calculate which glyph in the mapping is the most similar
+    for (GlyphInfo glyph : foundGlyphs) {
+      char matchedCharacter = glyphMatcher.findClosestGlyph(mapping, glyph.getFeatureDescriptor());
+      glyph.setMatchedCharacter(matchedCharacter);
+    }
+
+    //now put the glyphs in order to prepare for output
+    orderGlyphs(foundGlyphs);
+  }
+
+  private void orderGlyphs(ArrayList<GlyphInfo> foundGlyphs)
+  {
+    //somehow put in order using bounding boxes
+    ArrayList<GlyphInfo> orderedGlyphs = foundGlyphs;
+
+    //now display options for outputting the transcribed text
+    //TODO: pass off to validation here instead
+    outputTranscription(orderedGlyphs);
+  }
+
+  private void outputTranscription(ArrayList<GlyphInfo> orderedGlyphs)
+  {
+    for (GlyphInfo glyph : orderedGlyphs) {
+      System.out.print(glyph.getMatchedCharacter());
+    }
   }
 }
