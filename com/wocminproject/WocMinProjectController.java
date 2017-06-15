@@ -7,6 +7,7 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
   MappingChooser mappingChooser;
   ImageChooser imageChooser;
   RequestGlyphArray serviceRequester;
+  DeserializeGlyphInfo deserializer;
 
   ArrayList<MappedGlyph> mapping;
 
@@ -18,6 +19,7 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
   public WocMinProjectController()
   {
     serviceRequester = new RequestGlyphArray();
+    deserializer = new DeserializeGlyphInfo();
   }
 
   public void run()
@@ -39,7 +41,7 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
     imageChooser.setImageChosenListener(this);
   }
 
-  public void processMapping(File mappingFolder)
+  private void processMapping(File mappingFolder)
   {
     //use files in folder to find mapping
     mapping = new ArrayList<MappedGlyph>();
@@ -50,12 +52,24 @@ public class WocMinProjectController implements MappingFolderChosenListener, Ima
     //TODO: show some kind of dialog while this process is going on?
 
     //send image to glyph analysis service and get JSON response back
-    String imageInfo = serviceRequester.getGlyphInfo(image);
-    if (imageInfo.isEmpty()) {
+    String json = serviceRequester.getGlyphInfo(image);
+    if (json.isEmpty()) {
       //TODO: show warning that no response came back
       return;
     }
 
-    System.out.println("Image info: " + imageInfo);
+    //get Java objects from JSON response
+    ArrayList<GlyphInfo> foundGlyphs = deserializer.getGlyphInfoFromJson(json);
+    if (foundGlyphs.size() == 0) {
+      //TODO: show warning that no glyphs were found
+      return;
+    }
+    mapGlyphs(foundGlyphs);
+  }
+
+  private void mapGlyphs(ArrayList<GlyphInfo> foundGlyphs)
+  {
+    System.out.println("Glyphs to match: " + foundGlyphs.size());
+    System.out.println("Glyphs in mapping: " + mapping.size());
   }
 }
