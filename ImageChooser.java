@@ -159,7 +159,8 @@ public class ImageChooser extends JFrame {
 			
 			if (e.getSource() == finishButton) {
 				JOptionPane.showMessageDialog(new JFrame(), "Finished!");
-				// close window and proceed
+				//setVisible(false);
+				//new WriteWindow("string");
 			}
 			
 		}
@@ -167,10 +168,9 @@ public class ImageChooser extends JFrame {
 	
 	public static void main(String[] args) {
 		
-		//new AlphabetUploader();
-		new ImageChooser();
-		
-		//new WriteWindow("Test 25");
+		new AlphabetUploader();
+		//new ImageChooser();
+		//new WriteWindow("Test Twenty-six");
 
 	}
 }

@@ -9,8 +9,8 @@ public class AlphabetUploader extends JFrame {
 	
 	private JButton imageButton;
 	private JTextField field;
-	private JButton uploadButton;
-	private JPanel panel;
+	private JButton uploadButton, finishButton;
+	private JPanel panel, panel2;
 	private DirectoryChooser d1;
 	private File folder;
 	private File[] listFiles;
@@ -37,12 +37,22 @@ public class AlphabetUploader extends JFrame {
 		imageButton.addActionListener(d1);
 		uploadButton.addActionListener(d1);
 		
+		finishButton = new JButton("Finish");
+		finishButton.setEnabled(false);
+		finishButton.addActionListener(d1);
+		
+		
+		panel2 = new JPanel();
+		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		panel2.add(finishButton);
+		
 		panel = new JPanel();
 		panel.add(imageButton, BorderLayout.NORTH);
 		panel.add(field, BorderLayout.NORTH);
 		panel.add(uploadButton, BorderLayout.CENTER);
 		
 		add(panel);
+		add(panel2, BorderLayout.SOUTH);
 		
 		setVisible(true);
 		
@@ -75,16 +85,9 @@ public class AlphabetUploader extends JFrame {
 			if (e.getSource() == uploadButton) {
 				
 				for(int i = 0; i < listFiles.length; i++) {
-					// send each character to server
-					// receive back stamp info -> simulated with .createGlyph() method
-					// parse letter via file name DONE
-					// create new object with character and stamp data and compile into arraylist (HandwrittenLetter, alphabet) DONE
-					// be able to iterate through arraylist and return data, whether character or stamp DONE
 					
 					char newChar = listFiles[i].getName().charAt(0);
-					
-					
-					
+			
 					
 					GlyphInfo newGlyph = new GlyphInfo();
 					newGlyph.createGlyph(); // populates newGlyph.img with random numbers
@@ -103,6 +106,24 @@ public class AlphabetUploader extends JFrame {
 					
 					System.out.println();
 				}	
+				
+				finishButton.setEnabled(true);
+			}
+			
+			if (e.getSource() == finishButton) {
+				switch (JOptionPane.showConfirmDialog(new JFrame(), "Are you sure?")) {
+				case 0: // Yes
+					JOptionPane.showMessageDialog(new JFrame(), "Finished");
+					//setVisible(false);
+					//new ImageChooser();
+					break;
+				case 1: // No
+					break;
+				case 2: // Cancel
+					break;
+				}
+				
+				
 			}
 		}
 	}

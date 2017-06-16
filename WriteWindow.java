@@ -47,7 +47,7 @@ public class WriteWindow extends JFrame {
 		setSize(400, 150);
 		setLocation(400, 300);
 		setResizable(false);
-		setTitle("Save Window");
+		setTitle("Save As");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
@@ -72,13 +72,24 @@ public class WriteWindow extends JFrame {
 			}
 				
 			if (e.getSource() == fileButton) {
-				try {
-					FileWriter newWriter = new FileWriter(location);
-					PrintWriter pWriter = new PrintWriter(newWriter);
-					
-					pWriter.println(fileToWrite);
-					pWriter.close();
-				} catch (IOException error1) {}
+				
+				
+				switch(JOptionPane.showConfirmDialog(new JFrame(), "Are you sure?")) {
+					case 0: 
+						try {
+							FileWriter newWriter = new FileWriter(location);
+							PrintWriter pWriter = new PrintWriter(newWriter);
+							
+							pWriter.println(fileToWrite);
+							pWriter.close();
+						} catch (IOException error1) {}
+						setVisible(false);
+						break;
+					case 1:
+						break;
+					case 2:
+						break;
+				}
 			} 
 		}
 	}
