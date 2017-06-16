@@ -131,23 +131,53 @@ public class WocMinProjectController implements MappingFolderChosenListener,
   //Put found glyphs in order using bounding box info
   private void orderGlyphs(ArrayList<GlyphInfo> foundGlyphs)
   {
-    ArrayList<GlyphInfo> orderedGlyphs = foundGlyphs;
-
     //sort glyphs by Y coordinate
-    sortGlyphsByY(orderedGlyphs);
+    sortGlyphsByY(foundGlyphs);
 
     //calculate difference between Y coordinates of each two letters
+    ArrayList<Integer> differences = new ArrayList<Integer>();
+    for (int i = 0; i < (foundGlyphs.size() - 1); i++) {
+      int difference = foundGlyphs.get(i).getYStart() - foundGlyphs.get(i+1).getYStart();
+      difference = Math.abs(difference);
+      differences.add(difference);
+    }
 
     //calculate average letter height
     int totalLetterHeight = 0;
-    for (GlyphInfo glyph : orderedGlyphs) {
+    for (GlyphInfo glyph : foundGlyphs) {
       totalLetterHeight += glyph.getYDim();
     }
-    int averageLetterHeight = totalLetterHeight / orderedGlyphs.size();
-    System.out.println("average letter height: " + averageLetterHeight);
+    int averageLetterHeight = totalLetterHeight / foundGlyphs.size();
+
+    //loop through Y differences and find any that are greater than the average
+    //letter height, because these probably indicate row boundaries. Then split the
+    //glyphs by row
+    ArrayList<ArrayList<GlyphInfo>> glyphRows = new ArrayList<ArrayList<GlyphInfo>>();
+    int lastRowBoundary = 0;
+    for (int i = 0; i < differences.size(); i++) {
+      if (differences.get(i) > averageLetterHeight) {
+        ArrayList<GlyphInfo> newRow = new ArrayList<GlyphInfo>(foundGlyphs.subList(lastRowBoundary, i+1));
+        glyphRows.add(newRow);
+        lastRowBoundary = i+1;
+      }
+    }
+    //add the final row, which the loop above misses
+    ArrayList<GlyphInfo> finalRow = new ArrayList<GlyphInfo>(foundGlyphs.subList(lastRowBoundary, foundGlyphs.size()));
+    glyphRows.add(finalRow);
+
+    //for each row, sort by X coordinate
+    for (ArrayList<GlyphInfo> row : glyphRows) {
+      sortGlyphsByX(row);
+    }
+
+    //put all the rows together into one final ordered list
+    ArrayList<GlyphInfo> orderedGlyphs = new ArrayList<GlyphInfo>();
+    for (ArrayList<GlyphInfo> row : glyphRows) {
+      orderedGlyphs.addAll(row);
+    }
 
     //now display options for outputting the transcribed text
-    //TODO: pass off to validation here instead
+    //TODO: pass off to spacing here instead
     outputTranscription(orderedGlyphs);
   }
 
@@ -159,6 +189,18 @@ public class WocMinProjectController implements MappingFolderChosenListener,
                 return 0;
             }
             return o1.getYStart() < o2.getYStart() ? -1 : 1;
+        }
+    });
+  }
+
+  private void sortGlyphsByX(ArrayList<GlyphInfo> glyphs)
+  {
+    Collections.sort(glyphs, new Comparator<GlyphInfo>() {
+        public int compare(GlyphInfo o1, GlyphInfo o2) {
+            if (o1.getXStart() == o2.getXStart()) {
+                return 0;
+            }
+            return o1.getXStart() < o2.getXStart() ? -1 : 1;
         }
     });
   }
