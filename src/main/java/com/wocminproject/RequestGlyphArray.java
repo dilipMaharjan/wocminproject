@@ -63,8 +63,7 @@ public class RequestGlyphArray {
     }
 
     private ArrayList<GlyphInfo> getSortedArray(String jsonString) {
-        ArrayList<GlyphInfo> imageInfo = new Gson().fromJson(jsonString, new TypeToken<List<GlyphInfo>>() {
-        }.getType());
+        ArrayList<GlyphInfo> imageInfo = new DeserializeGlyphInfo().getGlyphInfoFromJson(jsonString);
         Collections.sort(imageInfo, new Comparator<GlyphInfo>() {
             public int compare(GlyphInfo o1, GlyphInfo o2) {
                 if (o1.getYStart() == o2.getYStart()) {
