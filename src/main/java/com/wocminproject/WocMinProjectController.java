@@ -150,5 +150,4 @@ public class WocMinProjectController implements MappingFolderChosenListener,
         }
         return stringBuilderOfGlyphInfo.toString();
     }
-
 }
