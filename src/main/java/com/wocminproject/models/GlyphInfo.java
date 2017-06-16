@@ -10,6 +10,13 @@ public class GlyphInfo {
   private int y_start;
   private char matchedCharacter;
 
+  public GlyphInfo() {}
+
+  public GlyphInfo(char matchedCharacter)
+  {
+      this.matchedCharacter = matchedCharacter;
+  }
+
   public int[] getFeatureDescriptor()
   {
     return img;

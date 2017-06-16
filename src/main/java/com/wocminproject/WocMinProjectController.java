@@ -3,6 +3,8 @@ package com.wocminproject;
 import java.io.File;
 import java.util.*;
 
+import com.wocminproject.models.*;
+
 public class WocMinProjectController implements MappingFolderChosenListener,
                                                 ImageChosenListener {
   MappingChooser mappingChooser;

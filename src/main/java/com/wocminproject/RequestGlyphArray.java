@@ -53,7 +53,6 @@ public class RequestGlyphArray {
             e.printStackTrace();
             return "";
         }
-        return "";
     }
 
     private ArrayList<GlyphInfo> getSortedArray(String jsonString) {
