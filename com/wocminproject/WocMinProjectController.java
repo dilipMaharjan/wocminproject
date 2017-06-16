@@ -4,8 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class WocMinProjectController implements MappingFolderChosenListener,
-                                                ImageChosenListener,
-                                                OutputFileChosenListener {
+                                                ImageChosenListener {
   MappingChooser mappingChooser;
   ImageChooser imageChooser;
   RequestGlyphArray serviceRequester;
@@ -141,15 +140,14 @@ public class WocMinProjectController implements MappingFolderChosenListener,
 
   private void outputTranscription(ArrayList<GlyphInfo> orderedGlyphs)
   {
+    //build output string
+    String output = "natty test";
+
     //show output selection window
+    WriteWindow outputWindow = new WriteWindow(output);
 
     for (GlyphInfo glyph : orderedGlyphs) {
-      System.out.print(glyph.getMatchedCharacter());
+      System.out.println(glyph.getMatchedCharacter() + " " + glyph.getYStart());
     }
-  }
-
-  public void outputFileChosen(File selectedFile)
-  {
-    
   }
 }
