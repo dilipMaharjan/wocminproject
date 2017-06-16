@@ -7,13 +7,10 @@ import java.util.*;
 
 public class WriteWindow extends JFrame {
 
-	private JTextField fileNameOutput;
 	private JButton fileButton;
-	private JPanel panel1, panel2, panel4;
+	private JPanel panel1, panel2;
 	private JLabel label;
-	private String fileName;
 	private String fileToWrite;
-	private ButtonListener b1;
 	
 	// Call new WriteWindow with an argument of the string to be written to the file
 	public WriteWindow(String file) {
@@ -22,29 +19,22 @@ public class WriteWindow extends JFrame {
 		
 		panel1 = new JPanel();
 		panel2 = new JPanel();
-		panel4 = new JPanel();
+	
+		fileButton = new JButton("Save");
+		label = new JLabel("Click to Save");
 		
+		fileButton.addActionListener(new ButtonListener());
 		
-		
-		
-		fileNameOutput = new JTextField(25);
-		fileButton = new JButton("Enter");
-		label = new JLabel("Enter a file name");
-		
-		b1 = new ButtonListener();
-		fileButton.addActionListener(b1);
-		
-		panel1.add(fileNameOutput, BorderLayout.NORTH);
 		panel1.add(label, BorderLayout.NORTH);
 		panel2.add(fileButton);
 		
 		
 		add(panel1, BorderLayout.NORTH);
 		add(panel2, BorderLayout.CENTER);
-		add(panel4, BorderLayout.SOUTH);
 		
 		setSize(800, 250);
 		setLocation(300, 300);
+		setResizable(false);
 		setTitle("Save Window");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
@@ -53,47 +43,30 @@ public class WriteWindow extends JFrame {
 	public class ButtonListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == fileButton) {
-				fileName = fileNameOutput.getText().trim();
+
+				JFileChooser newChooser = new JFileChooser();
+				newChooser.setCurrentDirectory(null);
 				
-				// allows user to add extension or not
-				if (!fileName.endsWith(".txt")) {
-					fileName += ".txt";
-				}
-				
-				fileNameOutput.setEditable(false);
-	
+				int saveFile = newChooser.showSaveDialog(null);
+				if(saveFile == JFileChooser.APPROVE_OPTION) {
+					
+					try {
+						String location = newChooser.getSelectedFile().getPath().trim();
+						if(!location.endsWith(".txt")){
+							location += ".txt";
+						}
+						 
+						FileWriter newWriter = new FileWriter(location);
+						PrintWriter pWriter = new PrintWriter(newWriter);
 						
-				TextWriter object1 = new TextWriter();
-				object1.writeFile(fileName, fileToWrite);		
-			}	
+						pWriter.println(fileToWrite);
+						pWriter.close();
+						
+					} catch (IOException err) {
+						}
+				}
 			
 		}
 	}
 	
-	public class TextWriter {
-		
-		public TextWriter() {
-			
-		}
-		
-		// Takes in a file name and an array of Strings (each string is one line) and writes them to a new file named by the user
-		public void writeFile(String fileName, String a) {
-			File newFile = new File(fileName);
-			
-			try {
-				FileWriter newWriter = new FileWriter(newFile);
-				PrintWriter pWriter = new PrintWriter(newWriter);
-				
-				pWriter.println(a);
-				pWriter.close();
-			} 
-			catch (IOException e) {
-				
-			}
-
-		}
-		
-	}
-
 }
