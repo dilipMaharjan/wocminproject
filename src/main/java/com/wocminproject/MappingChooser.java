@@ -4,13 +4,16 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
+import javax.swing.filechooser.*;
+import java.util.*;
 
 public class MappingChooser extends JFrame implements ActionListener {
 
 	private JButton imageButton;
 	private JTextField field;
-	private JButton uploadButton;
-	private JPanel panel;
+	private JButton uploadButton, finishButton;
+	private JPanel panel, panel2;
+
 	private File folder;
 	private File[] listFiles;
 
@@ -34,12 +37,20 @@ public class MappingChooser extends JFrame implements ActionListener {
 		imageButton.addActionListener(this);
 		uploadButton.addActionListener(this);
 
+		finishButton = new JButton("Finish");
+		finishButton.setEnabled(false);
+		finishButton.addActionListener(this);
+
+		panel2 = new JPanel();
+		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		panel2.add(finishButton);
 		panel = new JPanel();
 		panel.add(imageButton, BorderLayout.NORTH);
 		panel.add(field, BorderLayout.NORTH);
 		panel.add(uploadButton, BorderLayout.CENTER);
 
 		add(panel);
+		add(panel2, BorderLayout.SOUTH);
 
 		setVisible(true);
 
@@ -73,7 +84,20 @@ public class MappingChooser extends JFrame implements ActionListener {
 			if (directoryChosenListener != null) {
 				directoryChosenListener.mappingFolderChosen(folder);
 			}
+			finishButton.setEnabled(true);
 		}
-
+		if (e.getSource() == finishButton) {
+			switch (JOptionPane.showConfirmDialog(new JFrame(), "Are you sure?")) {
+				case 0: // Yes
+					JOptionPane.showMessageDialog(new JFrame(), "Finished");
+					//setVisible(false);
+					//new ImageChooser();
+					break;
+				case 1: // No
+					break;
+				case 2: // Cancel
+					break;
+			}
+		}
 	}
 }

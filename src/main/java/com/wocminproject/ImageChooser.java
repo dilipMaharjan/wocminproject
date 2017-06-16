@@ -12,23 +12,22 @@ import javax.swing.filechooser.*;
 //	> Upload Button
 public class ImageChooser extends JFrame implements ActionListener {
 
-	private boolean alpha = true;
-	private JButton uploadButton, imageButton, alphabetButton, changeButton, viewButton;
-	private JPanel panel1, panel2, panel3, alphaPanel; // panel1 - image selection // panel2 - upload // panel3 - source alphabet
-	private JTextField field, field2; // field - image selection // field2 - source alphabet selection
-	private JLabel alphaIndicator;
-	//private String sourceImage;
+	private JButton uploadButton, imageButton, finishButton;
+	private JPanel panel1, panel2, panel3; // panel1 - image selection // panel2 - upload // panel3 - source alphabet
+	private JTextField field; // field - image selection // field2 - source alphabet selection
+	ImageChosenListener imageChosenListener;
+
 	File file = new File("");
 	ImageIcon image = new ImageIcon();
 	String lastPath;
 	JFrame confirmFrame;
-	ImageChosenListener imageChosenListener;
 
 	public ImageChooser() {
 
 		uploadButton = new JButton("Upload");
 		uploadButton.setEnabled(false); // Disables upload button until a readable image is selected
-
+		/* finishButton = new JButton("Finish");
+		finishButton.setEnabled(false); */
 		imageButton = new JButton("Choose an image");
 
 		field = new JTextField(45);
@@ -38,30 +37,27 @@ public class ImageChooser extends JFrame implements ActionListener {
 		//f1 = new FileChooseListener();
 		imageButton.addActionListener(this);
 		uploadButton.addActionListener(this);
+		//finishButton.addActionListener(this);
 
 		panel1 = new JPanel(); // image button and text field
 		panel2 = new JPanel(); // upload button
-		//panel3 = new JPanel();
+		panel3 = new JPanel(); // Finish button
 
 		panel1.add(imageButton, BorderLayout.NORTH);
 		panel1.add(field, BorderLayout.CENTER);
 		panel2.add(uploadButton, BorderLayout.SOUTH);
 
-		alphabetButton = new JButton("Select source alphabet image");
-		alphabetButton.addActionListener(this);
-		field2 = new JTextField(45);
-
-		//panel3.add(alphabetButton);
-		//panel3.add(field2);
+		panel3.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		//panel3.add(finishButton);
 
 		add(panel1, BorderLayout.NORTH);
-		//add(panel3, BorderLayout.NORTH);
 		add(panel2, BorderLayout.CENTER);
+		add(panel3, BorderLayout.SOUTH);
 
 		// Window specifications
 		setTitle("Transcribe Text");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(800, 250);
+		setSize(800, 200);
 		setResizable(false);
 		setLocation(300, 300);
 		setVisible(true);
@@ -122,12 +118,8 @@ public class ImageChooser extends JFrame implements ActionListener {
 		}
 		// Upload image to the server
 		if (e.getSource() == uploadButton) {
-			  if (imageChosenListener != null)
-				{
-					imageChosenListener.imageChosen(file);
-				}
-			  //Code for displaying the image and asking for confirmation. Could add later
-				/* JFrame newFrame = new JFrame();
+
+				JFrame newFrame = new JFrame();
 				newFrame.setSize(200, 200);
 				newFrame.setAlwaysOnTop(true);
 				JPanel newPanel = new JPanel();
@@ -144,35 +136,44 @@ public class ImageChooser extends JFrame implements ActionListener {
 				// Gives the user a display of the image and asks them to confirm that they wish to upload the right one
 				switch (JOptionPane.showConfirmDialog(confirmFrame, "Is this the right image?")) {
 					case 0: // Yes
-						JOptionPane.showMessageDialog(confirmFrame, "Uploading...");
+						if (imageChosenListener != null)
+						{
+							imageChosenListener.imageChosen(file);
+						}
 						imageButton.setText("Choose an image");
 						field.setText("");
 						uploadButton.setEnabled(false);
 						newFrame.setVisible(false);
-						if (alpha) {
-							//sourceImage = file.getPath();
-						}
-						alpha = false;
+						//finishButton.setEnabled(true);
 						break;
 					case 1: // No
 						imageButton.setText("Choose an image");
 						newFrame.setVisible(false);
-						if (alpha) {
-							field2.setText("");
-							uploadButton.setEnabled(false);
-						}
+						field.setText("");
+						uploadButton.setEnabled(false);
 						break;
 					case 2: // Cancel
 						newFrame.setVisible(false);
 						field.setText("");
 						uploadButton.setEnabled(false);
-						if (alpha) {
-							field2.setText("");
-							uploadButton.setEnabled(false);
-						}
 						break;
-				} */
-		}
+				}
+			}
+
+					/* if (e.getSource() == finishButton) {
+
+						// upload to server
+
+						switch(JOptionPane.showConfirmDialog(new JFrame(), "Are you sure?")) {
+							case 0: // Yes
+								JOptionPane.showMessageDialog(new JFrame(), "Finished");
+								break;
+							case 1: // No
+								break;
+							case 2: // Cancel
+								break;
+				}
+		} */
 	}
 }
 

@@ -9,13 +9,11 @@ import java.util.*;
 
 public class WriteWindow extends JFrame {
 
-	private JTextField fileNameOutput;
-	private JButton fileButton;
-	private JPanel panel1, panel2, panel4;
+	private JButton fileButton, selectButton;
+	private JTextField field;
+	private JPanel panel1, panel2;
 	private JLabel label;
-	private String fileName;
-	private String fileToWrite;
-	private ButtonListener b1;
+	private String fileToWrite, location;
 
 	// Call new WriteWindow with an argument of the string to be written to the file
 	public WriteWindow(String file) {
@@ -24,30 +22,34 @@ public class WriteWindow extends JFrame {
 
 		panel1 = new JPanel();
 		panel2 = new JPanel();
-		panel4 = new JPanel();
+
+		fileButton = new JButton("Save");
+		label = new JLabel("          Choose a Location for your file");
+
+		selectButton = new JButton("Choose Location");
+		selectButton.addActionListener(new ButtonListener());
+
+		field = new JTextField(30);
+		field.setEditable(false);
 
 
+		fileButton.addActionListener(new ButtonListener());
 
+		panel1.setLayout(new BorderLayout());
 
-		fileNameOutput = new JTextField(25);
-		fileButton = new JButton("Enter");
-		label = new JLabel("Enter a file name");
+		panel1.add(label, BorderLayout.WEST);
+		panel1.add(selectButton, BorderLayout.EAST);
+		panel1.add(field, BorderLayout.SOUTH);
 
-		b1 = new ButtonListener();
-		fileButton.addActionListener(b1);
-
-		panel1.add(fileNameOutput, BorderLayout.NORTH);
-		panel1.add(label, BorderLayout.NORTH);
-		panel2.add(fileButton);
-
+		panel2.add(fileButton, BorderLayout.SOUTH);
 
 		add(panel1, BorderLayout.NORTH);
-		add(panel2, BorderLayout.CENTER);
-		add(panel4, BorderLayout.SOUTH);
+		add(panel2, BorderLayout.SOUTH);
 
-		setSize(800, 250);
-		setLocation(300, 300);
-		setTitle("Save Window");
+		setSize(400, 150);
+		setLocation(400, 300);
+		setResizable(false);
+		setTitle("Save As");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
@@ -55,47 +57,42 @@ public class WriteWindow extends JFrame {
 	public class ButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == fileButton) {
-				fileName = fileNameOutput.getText().trim();
 
-				// allows user to add extension or not
-				if (!fileName.endsWith(".txt")) {
-					fileName += ".txt";
+			if(e.getSource() == selectButton) {
+				JFileChooser newChooser = new JFileChooser();
+				newChooser.setCurrentDirectory(null);
+
+				int saveFile = newChooser.showSaveDialog(null);
+				if(saveFile == JFileChooser.APPROVE_OPTION) {
+
+						location = newChooser.getSelectedFile().getPath().trim();
+						if(!location.endsWith(".txt")){
+							location += ".txt";
+						}
 				}
-
-				fileNameOutput.setEditable(false);
-
-
-				TextWriter object1 = new TextWriter();
-				object1.writeFile(fileName, fileToWrite);
+				field.setText(location);
 			}
 
+			if (e.getSource() == fileButton) {
+
+
+				switch(JOptionPane.showConfirmDialog(new JFrame(), "Are you sure?")) {
+					case 0:
+						try {
+							FileWriter newWriter = new FileWriter(location);
+							PrintWriter pWriter = new PrintWriter(newWriter);
+
+							pWriter.println(fileToWrite);
+							pWriter.close();
+						} catch (IOException error1) {}
+						setVisible(false);
+						break;
+					case 1:
+						break;
+					case 2:
+						break;
+				}
+			}
 		}
 	}
-
-	public class TextWriter {
-
-		public TextWriter() {
-
-		}
-
-		// Takes in a file name and an array of Strings (each string is one line) and writes them to a new file named by the user
-		public void writeFile(String fileName, String a) {
-			File newFile = new File(fileName);
-
-			try {
-				FileWriter newWriter = new FileWriter(newFile);
-				PrintWriter pWriter = new PrintWriter(newWriter);
-
-				pWriter.println(a);
-				pWriter.close();
-			}
-			catch (IOException e) {
-
-			}
-
-		}
-
-	}
-
 }
