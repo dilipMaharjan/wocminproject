@@ -11,8 +11,8 @@ public class WriteWindow extends JFrame {
 
 	private JButton fileButton, selectButton;
 	private JTextField field;
-	private JPanel panel1, panel2;
-	private JLabel label;
+	private JPanel topPanel, panel1, panel2;
+	private JLabel info, info2;
 	private String fileToWrite, location;
 
 	// Call new WriteWindow with an argument of the string to be written to the file
@@ -20,34 +20,50 @@ public class WriteWindow extends JFrame {
 
 		fileToWrite = file;
 
+		Color lightBlue = new Color(40, 151, 207);
+
+		topPanel = new JPanel();
+		topPanel.setBackground(lightBlue);
+
+		info = new JLabel("Choose where to save the transcribed text");
+		info.setFont(new Font(null, Font.PLAIN, 14));
+		info.setForeground(Color.white);
+		topPanel.add(info);
+
 		panel1 = new JPanel();
-		panel2 = new JPanel();
+		panel1.setBackground(Color.white);
 
-		fileButton = new JButton("Save");
-		label = new JLabel("          Choose a Location for your file");
-
-		selectButton = new JButton("Choose Location");
+		selectButton = new JButton("Choose file");
+		selectButton.setFont(new Font(null, Font.PLAIN, 14));
 		selectButton.addActionListener(new ButtonListener());
 
 		field = new JTextField(30);
+		field.setFont(new Font(null, Font.PLAIN, 14));
 		field.setEditable(false);
 
+		panel1.add(selectButton);
+		panel1.add(field);
 
+		panel2 = new JPanel();
+		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+		info2 = new JLabel("Just hit Save!");
+		info2.setVisible(false);
+
+		fileButton = new JButton("Save");
+		fileButton.setFont(new Font(null, Font.PLAIN, 14));
+		fileButton.setEnabled(false);
 		fileButton.addActionListener(new ButtonListener());
 
-		panel1.setLayout(new BorderLayout());
-
-		panel1.add(label, BorderLayout.WEST);
-		panel1.add(selectButton, BorderLayout.EAST);
-		panel1.add(field, BorderLayout.SOUTH);
-
+		panel2.add(info2);
 		panel2.add(fileButton, BorderLayout.SOUTH);
 
-		add(panel1, BorderLayout.NORTH);
+		add(topPanel, BorderLayout.NORTH);
+		add(panel1, BorderLayout.CENTER);
 		add(panel2, BorderLayout.SOUTH);
 
-		setSize(400, 150);
-		setLocation(400, 300);
+		setSize(800, 350);
+		setLocation(250, 250);
 		setResizable(false);
 		setTitle("Save As");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,6 +87,8 @@ public class WriteWindow extends JFrame {
 						}
 				}
 				field.setText(location);
+				fileButton.setEnabled(true);
+				info2.setVisible(true);
 			}
 
 			if (e.getSource() == fileButton) {
@@ -85,7 +103,7 @@ public class WriteWindow extends JFrame {
 							pWriter.println(fileToWrite);
 							pWriter.close();
 						} catch (IOException error1) {}
-						setVisible(false);
+						System.exit(0);
 						break;
 					case 1:
 						break;

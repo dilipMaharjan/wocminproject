@@ -1,6 +1,8 @@
 package com.wocminproject;
 
 import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+
 import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
@@ -11,47 +13,72 @@ public class MappingChooser extends JFrame implements ActionListener {
 
 	private JButton imageButton;
 	private JTextField field;
-	private JButton uploadButton, finishButton;
-	private JPanel panel, panel2;
+	private JButton uploadButton;
+	private JPanel panel, panel2, topPanel;
+	private JLabel info, info2, label;
+	MappingFolderChosenListener directoryChosenListener;
 
 	private File folder;
 	private File[] listFiles;
 
+	/**
 	private MappingFolderChosenListener directoryChosenListener;
-
+	**/
 	public MappingChooser() {
-		setSize(800, 250);
-		setLocation(300, 300);
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Color lightBlue = new Color(40, 151, 207);
 
-		setResizable(false);
-		setTitle("Transcribe Text");
+		topPanel = new JPanel();
+		info = new JLabel("Choose a folder that contains your alphabet");
+		info.setFont(new Font(null, Font.PLAIN, 14));
+		info.setForeground(Color.white);
+		topPanel.setBackground(lightBlue);
+		topPanel.add(info, BorderLayout.NORTH);
 
+
+		panel = new JPanel();
+		panel.setBackground(Color.white);
+
+		label = new JLabel("Each image's name should be the letter that it corresponds to. For example, the image of the letter A could be A.png");
+		label.setFont(new Font(null, Font.PLAIN, 14));
+
+		field = new JTextField(45);
+		field.setFont(new Font(null, Font.PLAIN, 14));
+		field.setEditable(false);
 
 		imageButton = new JButton("Select a Directory");
-		field = new JTextField(45);
-		uploadButton = new JButton("Upload");
-		uploadButton.setEnabled(false);
-
+		imageButton.setFont(new Font(null, Font.PLAIN, 14));
 		imageButton.addActionListener(this);
-		uploadButton.addActionListener(this);
 
-		finishButton = new JButton("Finish");
-		finishButton.setEnabled(false);
-		finishButton.addActionListener(this);
+
+		panel.add(imageButton);
+		panel.add(field);
+		panel.add(label, BorderLayout.SOUTH);
 
 		panel2 = new JPanel();
 		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		panel2.add(finishButton);
-		panel = new JPanel();
-		panel.add(imageButton, BorderLayout.NORTH);
-		panel.add(field, BorderLayout.NORTH);
-		panel.add(uploadButton, BorderLayout.CENTER);
 
-		add(panel);
+		uploadButton = new JButton("Upload");
+		uploadButton.setFont(new Font(null, Font.PLAIN, 14));
+		uploadButton.setEnabled(false);
+		uploadButton.addActionListener(this);
+
+		info2 = new JLabel("Just hit upload!");
+		info2.setVisible(false);
+
+		panel2.add(info2);
+		panel2.add(uploadButton, BorderLayout.SOUTH);
+
+		add(topPanel, BorderLayout.NORTH);
+		add(panel, BorderLayout.CENTER);
 		add(panel2, BorderLayout.SOUTH);
 
+
+		setSize(800, 350);
+		setLocation(250, 250);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
+		setTitle("Transcribe Text");
 		setVisible(true);
 
 	}
@@ -72,6 +99,7 @@ public class MappingChooser extends JFrame implements ActionListener {
 
 			if(newChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				uploadButton.setEnabled(true);
+				info2.setVisible(true);
 
 				folder = new File(newChooser.getSelectedFile().getPath());
 				field.setText(newChooser.getSelectedFile().getPath());
@@ -81,11 +109,15 @@ public class MappingChooser extends JFrame implements ActionListener {
 		}
 
 		if (e.getSource() == uploadButton) {
+			info2.setText("Uploading and processing your letter images...");
 			if (directoryChosenListener != null) {
 				directoryChosenListener.mappingFolderChosen(folder);
 			}
-			finishButton.setEnabled(true);
+			//finishButton.setEnabled(true);
+
 		}
+
+		/**
 		if (e.getSource() == finishButton) {
 			switch (JOptionPane.showConfirmDialog(new JFrame(), "Are you sure?")) {
 				case 0: // Yes
@@ -99,5 +131,7 @@ public class MappingChooser extends JFrame implements ActionListener {
 					break;
 			}
 		}
+
+		**/
 	}
 }

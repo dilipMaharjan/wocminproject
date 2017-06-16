@@ -115,6 +115,7 @@ public class WocMinProjectController implements MappingFolderChosenListener,
     ArrayList<GlyphInfo> matchedGlyphs = mapGlyphs(foundGlyphs);
     ArrayList<ArrayList<GlyphInfo>> orderedGlyphRows = orderGlyphs(matchedGlyphs);
     ArrayList<GlyphInfo> spacedGlyphs = spaceGlyphRows(orderedGlyphRows);
+    imageChooser.setVisible(false);
     outputTranscription(spacedGlyphs);
   }
 

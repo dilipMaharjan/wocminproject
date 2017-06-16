@@ -12,8 +12,9 @@ import javax.swing.filechooser.*;
 //	> Upload Button
 public class ImageChooser extends JFrame implements ActionListener {
 
-	private JButton uploadButton, imageButton, finishButton;
-	private JPanel panel1, panel2, panel3; // panel1 - image selection // panel2 - upload // panel3 - source alphabet
+	private JLabel info, info2;
+	private JButton uploadButton, imageButton;
+	private JPanel topPanel, panel1, panel2; // panel1 - image selection // panel2 - upload // panel3 - source alphabet
 	private JTextField field; // field - image selection // field2 - source alphabet selection
 	ImageChosenListener imageChosenListener;
 
@@ -24,42 +25,60 @@ public class ImageChooser extends JFrame implements ActionListener {
 
 	public ImageChooser() {
 
-		uploadButton = new JButton("Upload");
-		uploadButton.setEnabled(false); // Disables upload button until a readable image is selected
-		/* finishButton = new JButton("Finish");
-		finishButton.setEnabled(false); */
-		imageButton = new JButton("Choose an image");
 
-		field = new JTextField(45);
-		field.setEditable(false); // Ensures that users will only attempt to upload viable images
 
-		// Create and add an ActionListener to buttons
-		//f1 = new FileChooseListener();
-		imageButton.addActionListener(this);
-		uploadButton.addActionListener(this);
-		//finishButton.addActionListener(this);
+		Color lightBlue = new Color(40, 151, 207);
+
+		topPanel = new JPanel(); // upload button
+		topPanel.setBackground(lightBlue);
+
+		info = new JLabel("Choose an image that contains the text you want to transcribe");
+		info.setFont(new Font(null, Font.PLAIN, 18));
+		info.setForeground(Color.white);
+		topPanel.add(info);
+
+
 
 		panel1 = new JPanel(); // image button and text field
-		panel2 = new JPanel(); // upload button
-		panel3 = new JPanel(); // Finish button
+		panel1.setBackground(Color.white);
+
+		imageButton = new JButton("Choose an image");
+		imageButton.setFont(new Font(null, Font.PLAIN, 14));
+		imageButton.addActionListener(this);
+
+		field = new JTextField(45);
+		field.setFont(new Font(null, Font.PLAIN, 14));
+		field.setEditable(false); // Ensures that users will only attempt to upload viable images
 
 		panel1.add(imageButton, BorderLayout.NORTH);
 		panel1.add(field, BorderLayout.CENTER);
+
+
+
+		panel2 = new JPanel(); // Finish button
+		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+		info2 = new JLabel("Just hit upload!");
+
+		uploadButton = new JButton("Upload");
+		uploadButton.setEnabled(false); // Disables upload button until a readable image is selected
+		uploadButton.setFont(new Font(null, Font.PLAIN, 14));
+		uploadButton.addActionListener(this);
+
+		panel2.add(info2);
+		info2.setVisible(false);
 		panel2.add(uploadButton, BorderLayout.SOUTH);
 
-		panel3.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		//panel3.add(finishButton);
-
-		add(panel1, BorderLayout.NORTH);
-		add(panel2, BorderLayout.CENTER);
-		add(panel3, BorderLayout.SOUTH);
+		add(topPanel, BorderLayout.NORTH);
+		add(panel1, BorderLayout.CENTER);
+		add(panel2, BorderLayout.SOUTH);
 
 		// Window specifications
 		setTitle("Transcribe Text");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(800, 200);
+		setSize(800, 350);
 		setResizable(false);
-		setLocation(300, 300);
+		setLocation(250, 250);
 		setVisible(true);
 
 	}
@@ -89,11 +108,13 @@ public class ImageChooser extends JFrame implements ActionListener {
 					image = new ImageIcon(file.getPath());
 					field.setText(file.getPath());
 					uploadButton.setEnabled(true);
+					info2.setVisible(true);
 				}
 				else {
 					JOptionPane.showMessageDialog(new JFrame(), "Hmm, this doesn't look like an image. Try selecting"
 							+ " another file.");
 					uploadButton.setEnabled(false);
+					info2.setVisible(false);
 					return;
 				}
 				// Checks to make sure you don't accidentally upload the same image twice in a row
@@ -136,13 +157,16 @@ public class ImageChooser extends JFrame implements ActionListener {
 				// Gives the user a display of the image and asks them to confirm that they wish to upload the right one
 				switch (JOptionPane.showConfirmDialog(confirmFrame, "Is this the right image?")) {
 					case 0: // Yes
+						info2.setText("Uploading and processing your image...");
 						if (imageChosenListener != null)
-						{
+						{	
 							imageChosenListener.imageChosen(file);
 						}
+
 						imageButton.setText("Choose an image");
-						field.setText("");
+						//field.setText("");
 						uploadButton.setEnabled(false);
+						info2.setText("Uploading your image now...");
 						newFrame.setVisible(false);
 						//finishButton.setEnabled(true);
 						break;
@@ -151,13 +175,17 @@ public class ImageChooser extends JFrame implements ActionListener {
 						newFrame.setVisible(false);
 						field.setText("");
 						uploadButton.setEnabled(false);
+						info2.setVisible(false);
 						break;
 					case 2: // Cancel
 						newFrame.setVisible(false);
 						field.setText("");
 						uploadButton.setEnabled(false);
+						info2.setVisible(false);
 						break;
 				}
+
+
 			}
 
 					/* if (e.getSource() == finishButton) {
