@@ -63,7 +63,7 @@ public class RequestGlyphArray {
         }.getType());
         Collections.sort(imageInfo, new Comparator<ImageInfo>() {
             public int compare(ImageInfo o1, ImageInfo o2) {
-                if (o1.getXStart() == o2.getXStart()) {
+                if (o1.getYStart()== o2.getYStart()) {
                     return 0;
                 }
                 return o1.getXStart() < o2.getXStart() ? -1 : 1;
