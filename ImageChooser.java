@@ -158,7 +158,19 @@ public class ImageChooser extends JFrame {
 			}
 			
 			if (e.getSource() == finishButton) {
-				JOptionPane.showMessageDialog(new JFrame(), "Finished!");
+				
+				// upload to server
+				
+				switch(JOptionPane.showConfirmDialog(new JFrame(), "Are you sure?")) {
+					case 0: // Yes
+						JOptionPane.showMessageDialog(new JFrame(), "Finished");
+						break;
+					case 1: // No
+						break;
+					case 2: // Cancel
+						break;
+				}
+				
 				//setVisible(false);
 				//new WriteWindow("string");
 			}
@@ -168,8 +180,8 @@ public class ImageChooser extends JFrame {
 	
 	public static void main(String[] args) {
 		
-		new AlphabetUploader();
-		//new ImageChooser();
+		//new AlphabetUploader();
+		new ImageChooser();
 		//new WriteWindow("Test Twenty-six");
 
 	}
