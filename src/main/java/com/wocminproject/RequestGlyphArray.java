@@ -26,19 +26,18 @@ import okhttp3.Response;
  * @author dmaharjan
  */
 public class RequestGlyphArray {
-
+    //Returns a JSON string of the response from the glyph analysis service
     public String getGlyphInfo(File file) {
         try {
 
             String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-            System.out.println("mime type: " + mimeType);
             MediaType imageType = MediaType.parse(mimeType);
 
             OkHttpClient client = new OkHttpClient();
 
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("image", "test2.png",
+                    .addFormDataPart("image", file.getName(),
                             RequestBody.create(imageType, file))
                     .build();
 
@@ -50,14 +49,9 @@ public class RequestGlyphArray {
             Response response = client.newCall(request).execute();
             String json = response.body().string();
             return json;
-
-            //for testing purposes
-//            for (GlyphInfo imageInfo : getSortedArray(json)) {
-//                System.out.println(imageInfo.getXStart());
-//            }
-//            System.out.println("I am the response" + json);
         } catch (Exception e) {
             e.printStackTrace();
+            return "";
         }
         return "";
     }
