@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
-import javax.swing.filechooser.*;
 
 public class MappingChooser extends JFrame implements ActionListener {
 
