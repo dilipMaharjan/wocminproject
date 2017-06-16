@@ -7,7 +7,7 @@ package com.wocminproject;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wocminproject.models.ImageInfo;
+import com.wocminproject.models.GlyphInfo;
 import java.io.File;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class RequestGlyphArray {
             return json;
 
             //for testing purposes
-//            for (ImageInfo imageInfo : getSortedArray(json)) {
+//            for (GlyphInfo imageInfo : getSortedArray(json)) {
 //                System.out.println(imageInfo.getXStart());
 //            }
 //            System.out.println("I am the response" + json);
@@ -62,11 +62,11 @@ public class RequestGlyphArray {
         return "";
     }
 
-    private ArrayList<ImageInfo> getSortedArray(String jsonString) {
-        ArrayList<ImageInfo> imageInfo = new Gson().fromJson(jsonString, new TypeToken<List<ImageInfo>>() {
+    private ArrayList<GlyphInfo> getSortedArray(String jsonString) {
+        ArrayList<GlyphInfo> imageInfo = new Gson().fromJson(jsonString, new TypeToken<List<GlyphInfo>>() {
         }.getType());
-        Collections.sort(imageInfo, new Comparator<ImageInfo>() {
-            public int compare(ImageInfo o1, ImageInfo o2) {
+        Collections.sort(imageInfo, new Comparator<GlyphInfo>() {
+            public int compare(GlyphInfo o1, GlyphInfo o2) {
                 if (o1.getYStart() == o2.getYStart()) {
                     return 0;
                 }

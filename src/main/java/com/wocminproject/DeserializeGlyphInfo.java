@@ -1,5 +1,6 @@
 package com.wocminproject;
 
+import com.wocminproject.models.GlyphInfo;
 import java.util.*;
 import java.lang.reflect.Type;
 import com.google.gson.*;

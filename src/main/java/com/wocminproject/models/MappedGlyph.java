@@ -1,4 +1,4 @@
-package com.wocminproject;
+package com.wocminproject.models;
 
 public class MappedGlyph {
   private int[] featureDescriptor;

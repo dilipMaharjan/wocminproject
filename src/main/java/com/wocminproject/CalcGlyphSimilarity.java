@@ -1,5 +1,6 @@
 package com.wocminproject;
 
+import com.wocminproject.models.MappedGlyph;
 import java.util.ArrayList;
 
 public class CalcGlyphSimilarity {

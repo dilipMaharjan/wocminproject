@@ -1,5 +1,8 @@
 package com.wocminproject;
 
+import com.wocminproject.models.GlyphInfo;
+import com.wocminproject.models.MappedGlyph;
+import com.wocminproject.util.ProgressDialog;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -93,6 +96,7 @@ public class WocMinProjectController implements MappingFolderChosenListener,
     }
 
     public void imageChosen(File image) {
+       
         //TODO: show some kind of dialog while this process is going on?
 
         //send image to glyph analysis service and get JSON response back
@@ -150,4 +154,5 @@ public class WocMinProjectController implements MappingFolderChosenListener,
         }
         return stringBuilderOfGlyphInfo.toString();
     }
+
 }
