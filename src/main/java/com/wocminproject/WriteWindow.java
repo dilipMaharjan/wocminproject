@@ -33,7 +33,7 @@ public class WriteWindow extends JFrame {
 		panel1 = new JPanel();
 		panel1.setBackground(Color.white);
 
-		selectButton = new JButton("Choose file");
+		selectButton = new JButton("Save file as");
 		selectButton.setFont(new Font(null, Font.PLAIN, 14));
 		selectButton.addActionListener(new ButtonListener());
 
