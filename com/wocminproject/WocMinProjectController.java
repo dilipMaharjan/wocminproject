@@ -1,7 +1,7 @@
 package com.wocminproject;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 
 public class WocMinProjectController implements MappingFolderChosenListener,
                                                 ImageChosenListener {
@@ -128,14 +128,39 @@ public class WocMinProjectController implements MappingFolderChosenListener,
     orderGlyphs(foundGlyphs);
   }
 
+  //Put found glyphs in order using bounding box info
   private void orderGlyphs(ArrayList<GlyphInfo> foundGlyphs)
   {
-    //somehow put in order using bounding boxes
     ArrayList<GlyphInfo> orderedGlyphs = foundGlyphs;
+
+    //sort glyphs by Y coordinate
+    sortGlyphsByY(orderedGlyphs);
+
+    //calculate difference between Y coordinates of each two letters
+
+    //calculate average letter height
+    int totalLetterHeight = 0;
+    for (GlyphInfo glyph : orderedGlyphs) {
+      totalLetterHeight += glyph.getYDim();
+    }
+    int averageLetterHeight = totalLetterHeight / orderedGlyphs.size();
+    System.out.println("average letter height: " + averageLetterHeight);
 
     //now display options for outputting the transcribed text
     //TODO: pass off to validation here instead
     outputTranscription(orderedGlyphs);
+  }
+
+  private void sortGlyphsByY(ArrayList<GlyphInfo> glyphs)
+  {
+    Collections.sort(glyphs, new Comparator<GlyphInfo>() {
+        public int compare(GlyphInfo o1, GlyphInfo o2) {
+            if (o1.getYStart() == o2.getYStart()) {
+                return 0;
+            }
+            return o1.getYStart() < o2.getYStart() ? -1 : 1;
+        }
+    });
   }
 
   private void outputTranscription(ArrayList<GlyphInfo> orderedGlyphs)
