@@ -20,8 +20,8 @@ public class WriteWindow extends JFrame {
 		panel1 = new JPanel();
 		panel2 = new JPanel();
 	
-		fileButton = new JButton("Save");
-		label = new JLabel("Click to Save");
+		fileButton = new JButton("Save As");
+		label = new JLabel("Choose a Location for your file");
 		
 		fileButton.addActionListener(new ButtonListener());
 		
@@ -32,8 +32,8 @@ public class WriteWindow extends JFrame {
 		add(panel1, BorderLayout.NORTH);
 		add(panel2, BorderLayout.CENTER);
 		
-		setSize(800, 250);
-		setLocation(300, 300);
+		setSize(500, 150);
+		setLocation(400, 300);
 		setResizable(false);
 		setTitle("Save Window");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -87,7 +87,7 @@ public class AlphabetUploader extends JFrame {
 					
 					
 					GlyphInfo newGlyph = new GlyphInfo();
-					newGlyph.createGlyph();
+					newGlyph.createGlyph(); // populates newGlyph.img with random numbers
 					
 					// ArrayList of HandwrittenLetter objects, each one contains 1) character and 2) stamp
 					alphabet.add(new HandwrittenLetter(newChar, newGlyph.getImg()));
