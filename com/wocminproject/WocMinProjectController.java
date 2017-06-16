@@ -208,13 +208,17 @@ public class WocMinProjectController implements MappingFolderChosenListener,
   private void outputTranscription(ArrayList<GlyphInfo> orderedGlyphs)
   {
     //build output string
-    String output = "natty test";
+    String output = matchedString(orderedGlyphs);
 
     //show output selection window
     WriteWindow outputWindow = new WriteWindow(output);
+  }
 
-    for (GlyphInfo glyph : orderedGlyphs) {
-      System.out.println(glyph.getMatchedCharacter() + " " + glyph.getYStart());
-    }
+  private String matchedString(ArrayList<GlyphInfo> glyphInfos) {
+        StringBuilder stringBuilderOfGlyphInfo = new StringBuilder();
+        for (GlyphInfo glyphInfo : glyphInfos) {
+            stringBuilderOfGlyphInfo.append(String.valueOf(glyphInfo.getMatchedCharacter()));
+        }
+        return stringBuilderOfGlyphInfo.toString();
   }
 }
