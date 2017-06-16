@@ -27,7 +27,7 @@ import okhttp3.Response;
  */
 public class RequestGlyphArray {
 
-    public void getGlyphInfo(File file) {
+    public String getGlyphInfo(File file) {
         try {
 
             String mimeType = URLConnection.guessContentTypeFromName(file.getName());
@@ -49,13 +49,17 @@ public class RequestGlyphArray {
 
             Response response = client.newCall(request).execute();
             String json = response.body().string();
-            for (ImageInfo imageInfo : getSortedArray(json)) {
-                System.out.println(imageInfo.getXStart());
-            }
-            System.out.println("I am the response" + json);
+            return json;
+
+            //for testing purposes
+//            for (ImageInfo imageInfo : getSortedArray(json)) {
+//                System.out.println(imageInfo.getXStart());
+//            }
+//            System.out.println("I am the response" + json);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "";
     }
 
     private ArrayList<ImageInfo> getSortedArray(String jsonString) {
@@ -63,7 +67,7 @@ public class RequestGlyphArray {
         }.getType());
         Collections.sort(imageInfo, new Comparator<ImageInfo>() {
             public int compare(ImageInfo o1, ImageInfo o2) {
-                if (o1.getYStart()== o2.getYStart()) {
+                if (o1.getYStart() == o2.getYStart()) {
                     return 0;
                 }
                 return o1.getXStart() < o2.getXStart() ? -1 : 1;
