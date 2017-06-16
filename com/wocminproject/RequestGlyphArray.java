@@ -31,7 +31,6 @@ public class RequestGlyphArray {
         try {
 
             String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-            System.out.println("mime type: " + mimeType);
             MediaType imageType = MediaType.parse(mimeType);
 
             OkHttpClient client = new OkHttpClient();

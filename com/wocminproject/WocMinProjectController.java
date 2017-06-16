@@ -82,11 +82,6 @@ public class WocMinProjectController implements MappingFolderChosenListener,
       mapping.add(mappedGlyph);
     }
 
-    System.out.print("mapping: ");
-    for (MappedGlyph glyph : mapping) {
-      System.out.println(glyph.toString());
-    }
-
     //TODO: display warning if no characters were found to map to
     if (mapping.isEmpty()) {
       return false; //finding mapping info was unsuccessful
@@ -113,10 +108,15 @@ public class WocMinProjectController implements MappingFolderChosenListener,
       //TODO: show warning that no glyphs were found
       return;
     }
-    mapGlyphs(foundGlyphs);
+
+    //now go through the whole glyph mapping and ordering process
+    ArrayList<GlyphInfo> matchedGlyphs = mapGlyphs(foundGlyphs);
+    ArrayList<ArrayList<GlyphInfo>> orderedGlyphRows = orderGlyphs(matchedGlyphs);
+    ArrayList<GlyphInfo> spacedGlyphs = spaceGlyphRows(orderedGlyphRows);
+    outputTranscription(spacedGlyphs);
   }
 
-  private void mapGlyphs(ArrayList<GlyphInfo> foundGlyphs)
+  private ArrayList<GlyphInfo> mapGlyphs(ArrayList<GlyphInfo> foundGlyphs)
   {
     //for each found glyph, calculate which glyph in the mapping is the most similar
     for (GlyphInfo glyph : foundGlyphs) {
@@ -124,12 +124,11 @@ public class WocMinProjectController implements MappingFolderChosenListener,
       glyph.setMatchedCharacter(matchedCharacter);
     }
 
-    //now put the glyphs in order to prepare for output
-    orderGlyphs(foundGlyphs);
+    return foundGlyphs;
   }
 
   //Put found glyphs in order using bounding box info
-  private void orderGlyphs(ArrayList<GlyphInfo> foundGlyphs)
+  private ArrayList<ArrayList<GlyphInfo>> orderGlyphs(ArrayList<GlyphInfo> foundGlyphs)
   {
     //sort glyphs by Y coordinate
     sortGlyphsByY(foundGlyphs);
@@ -170,15 +169,15 @@ public class WocMinProjectController implements MappingFolderChosenListener,
       sortGlyphsByX(row);
     }
 
-    //put all the rows together into one final ordered list
-    ArrayList<GlyphInfo> orderedGlyphs = new ArrayList<GlyphInfo>();
-    for (ArrayList<GlyphInfo> row : glyphRows) {
-      orderedGlyphs.addAll(row);
-    }
+    return glyphRows;
 
-    //now display options for outputting the transcribed text
-    //TODO: pass off to spacing here instead
-    outputTranscription(orderedGlyphs);
+    // //put all the rows together into one final ordered list
+    // ArrayList<GlyphInfo> orderedGlyphs = new ArrayList<GlyphInfo>();
+    // for (ArrayList<GlyphInfo> row : glyphRows) {
+    //   orderedGlyphs.addAll(row);
+    // }
+    //
+    // return orderedGlyphs;
   }
 
   private void sortGlyphsByY(ArrayList<GlyphInfo> glyphs)
@@ -203,6 +202,47 @@ public class WocMinProjectController implements MappingFolderChosenListener,
             return o1.getXStart() < o2.getXStart() ? -1 : 1;
         }
     });
+  }
+
+  private ArrayList<GlyphInfo> spaceGlyphRows(ArrayList<ArrayList<GlyphInfo>> orderedGlyphRows)
+  {
+    //calculate average width of letters
+    int totalWidth = 0;
+    int totalGlyphs = 0;
+    for (ArrayList<GlyphInfo> row : orderedGlyphRows ) {
+      for (GlyphInfo glyph : row) {
+        totalWidth += glyph.getXDim();
+      }
+      totalGlyphs += row.size();
+    }
+    int avgGlyphWidth = totalWidth / totalGlyphs;
+
+    //in each row, look at width of space between each glyph
+    for (ArrayList<GlyphInfo> row : orderedGlyphRows) {
+      for (int i = 0; i < (row.size() - 1); i++) {
+        GlyphInfo firstGlyph = row.get(i);
+        GlyphInfo secondGlyph = row.get(i+1);
+        int space = secondGlyph.getXStart() - (firstGlyph.getXStart() + firstGlyph.getXDim());
+        //if the space between them is equal to or greater than the average glyph width, it's
+        //probably a space
+        if (space >= avgGlyphWidth) {
+          //insert a new GlyphInfo with a space
+          GlyphInfo spaceGlyph = new GlyphInfo(' ');
+          row.add(i+1, spaceGlyph);
+          i++;
+        }
+      }
+    }
+
+    //now put all the rows together into one ordered list, adding spaces between them
+    ArrayList<GlyphInfo> orderedGlyphs = new ArrayList<GlyphInfo>();
+    for (ArrayList<GlyphInfo> row : orderedGlyphRows) {
+      orderedGlyphs.addAll(row);
+      GlyphInfo spaceGlyph = new GlyphInfo(' ');
+      orderedGlyphs.add(spaceGlyph);
+    }
+
+    return orderedGlyphs;
   }
 
   private void outputTranscription(ArrayList<GlyphInfo> orderedGlyphs)
