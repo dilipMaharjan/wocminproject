@@ -97,11 +97,19 @@ public class WriteWindow extends JFrame {
 				switch(JOptionPane.showConfirmDialog(new JFrame(), "Are you sure?")) {
 					case 0:
 						try {
-							FileWriter newWriter = new FileWriter(location);
-							PrintWriter pWriter = new PrintWriter(newWriter);
+							// FileWriter newWriter = new FileWriter(location);
+							// PrintWriter pWriter = new PrintWriter(newWriter);
+							//
+							// pWriter.println(fileToWrite);
+							// pWriter.close();
 
-							pWriter.println(fileToWrite);
-							pWriter.close();
+							Writer out = new BufferedWriter(new OutputStreamWriter(
+						    new FileOutputStream(location), "UTF-8"));
+							try {
+							    out.write(fileToWrite);
+							} finally {
+							    out.close();
+							}
 						} catch (IOException error1) {}
 						System.exit(0);
 						break;
